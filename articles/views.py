@@ -47,7 +47,8 @@ def init_NYT_db(request):
             news_data.save()
         except:
             pass
-        
+
+
 class NYTView(APIView):
     def get(self, request):
         articles = Article.objects.filter(paper='NYT')
