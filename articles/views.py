@@ -33,18 +33,21 @@ class InitDBView(APIView):
 
 
 def init_NYT_db(request):
-    url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key={settings.NYT_API_KEY}"
+    url = f"https://api.nytimes.com/svc/topstories/v2/home.json?api-key={settings.NYT_API_KEY}"
     res = requests.get(url)
     articles = res.json()['results']
     for article in articles:
-        news_data = Article()
-        news_data.title = article['title']
-        news_data.abstract = article['abstract']
-        news_data.url = article['url']
-        news_data.img_url = article['multimedia'][0]['url']
-        news_data.section = article['section']
-        news_data.paper = 'NYT'
-        news_data.save()
+        try:
+            news_data = Article()
+            news_data.title = article['title']
+            news_data.abstract = article['abstract']
+            news_data.url = article['url']
+            news_data.img_url = article['multimedia'][0]['url']
+            news_data.section = article['section']
+            news_data.paper = 'NYT'
+            news_data.save()
+        except:
+            pass
         
 class NYTView(APIView):
     def get(self, request):

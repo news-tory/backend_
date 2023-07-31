@@ -2,7 +2,7 @@ from django.db import models
 
 class Article(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)
-    title = models.CharField(max_length=100)   # 기사 제목
+    title = models.CharField(max_length=100, unique=True)   # 기사 제목
     abstract = models.TextField(default="")    # 기사 요약
     url = models.URLField(max_length=1024)     # 기사 URL
     img_url = models.URLField(max_length=1024, default="") # 기사 이미지 URL
