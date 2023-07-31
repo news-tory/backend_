@@ -6,15 +6,15 @@ from .models import Article
 from .serializers import ArticleSerializer
 from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 
-# Create your views here.
 base_url = 'https://content.guardianapis.com/search'
 
 # @csrf_exempt
 class InitDBView(APIView):
     def get(self, request):
-        url = f'{base_url}?api-key=113f18c4-cb4f-4a81-a86b-8e79acaba7a6'
+        url = f'{base_url}?api-key={settings.GUARDIAN_API_KEY}'
         res = requests.get(url)
         articles = res.json()['response']['results']
 
@@ -31,3 +31,26 @@ class InitDBView(APIView):
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
 
+
+def init_NYT_db(request):
+    url = f"https://api.nytimes.com/svc/topstories/v2/home.json?api-key={settings.NYT_API_KEY}"
+    res = requests.get(url)
+    articles = res.json()['results']
+    for article in articles:
+        try:
+            news_data = Article()
+            news_data.title = article['title']
+            news_data.abstract = article['abstract']
+            news_data.url = article['url']
+            news_data.img_url = article['multimedia'][0]['url']
+            news_data.section = article['section']
+            news_data.paper = 'NYT'
+            news_data.save()
+        except:
+            pass
+        
+class NYTView(APIView):
+    def get(self, request):
+        articles = Article.objects.filter(paper='NYT')
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data)
