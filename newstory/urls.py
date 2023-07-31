@@ -20,8 +20,14 @@ from articles.views import *
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
     path('articles/', include('articles.urls')),
+
+    path('accounts/', include('dj_rest_auth.urls')),
+    path('accounts/', include('dj_rest_auth.registration.urls')),
+    path('accounts/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
-    path('dj/', include('dj_rest_auth.registration.urls')),
-    path('dj/registration', include('dj_rest_auth.registration.urls')),
+
+    # path('dj/', include('dj_rest_auth.registration.urls')),
+    # path('dj/registration', include('dj_rest_auth.registration.urls')),
 ]
