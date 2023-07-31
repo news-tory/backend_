@@ -18,7 +18,6 @@ class InitDBView(APIView):
         res = requests.get(url)
         articles = res.json()['response']['results']
 
-
         for article in articles:
             news_data = Article()
             news_data.title = article['webTitle']
