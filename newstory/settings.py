@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta  # 추가
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # take environment variables from .env.
+
+GUARDIAN_API_KEY = os.getenv("GUARDIAN_API_KEY")
+NYT_API_KEY = os.getenv("NYT_API_KEY")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

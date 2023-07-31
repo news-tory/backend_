@@ -6,6 +6,7 @@ from .models import Article
 from .serializers import ArticleSerializer
 from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 
 base_url = 'https://content.guardianapis.com/search'
@@ -13,7 +14,7 @@ base_url = 'https://content.guardianapis.com/search'
 # @csrf_exempt
 class InitDBView(APIView):
     def get(self, request):
-        url = f'{base_url}?api-key=113f18c4-cb4f-4a81-a86b-8e79acaba7a6'
+        url = f'{base_url}?api-key={settings.GUARDIAN_API_KEY}'
         res = requests.get(url)
         articles = res.json()['response']['results']
 
@@ -32,7 +33,7 @@ class InitDBView(APIView):
 
 
 def init_NYT_db(request):
-    url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key=GtzznOTW6FAU9nHeTVN6WRd48akFQbgA"
+    url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key={settings.NYT_API_KEY}"
     res = requests.get(url)
     articles = res.json()['results']
     for article in articles:
