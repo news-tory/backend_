@@ -19,6 +19,9 @@ from django.urls import path, include
 from articles.views import *
 
 urlpatterns = [
-    # path("admin/", admin.site.urls),
+    path("admin/", admin.site.urls),
     path('articles/', include('articles.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('dj/', include('dj_rest_auth.registration.urls')),
+    path('dj/registration', include('dj_rest_auth.registration.urls')),
 ]
