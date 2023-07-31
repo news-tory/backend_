@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-49jm!(76tq2p$33vrk2w0db-w%&ji7)w7xmo(il^%-jxx(&^fz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app/', '127.0.0.1']
+ALLOWED_HOSTS = ['port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app', '127.0.0.1']
 
 
 # Application definition
@@ -58,6 +58,8 @@ INSTALLED_APPS = [
 	'allauth.account',
 	# simple-jwt 관련 관련
 	'rest_framework_simplejwt',
+    # cors
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -127,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -208,6 +210,7 @@ SIMPLE_JWT = {
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
-    "http://127.0.0.1:8000"]
+    "http://127.0.0.1:8000",
+    "https://port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app"]
 
 CORS_ALLOW_CREDENTIALS = True
