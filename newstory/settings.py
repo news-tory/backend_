@@ -46,20 +46,35 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'accounts',
     'articles',
+
     #rest framework 관련
     'rest_framework',
     'rest_framework.authtoken',
+
+    # simple-jwt 관련 관련
+	'rest_framework_simplejwt',
+
 	#dj-rest-auth 관련
     'dj_rest_auth',
     'dj_rest_auth.registration',
+
 	'allauth',
 	'allauth.account',
+
+
+    # social login 관련
+	'allauth.socialaccount',
+    # allauth.socialaccount.providers.소셜로그인제공업체
+    'allauth.socialaccount.providers.google',   
+
 	# simple-jwt 관련 관련
 	'rest_framework_simplejwt',
     # cors
     'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -155,7 +170,7 @@ REST_AUTH = {
     'JWT_SERIALIZER': 'dj_rest_auth.serializers.JWTSerializer',
     'JWT_SERIALIZER_WITH_EXPIRATION': 'dj_rest_auth.serializers.JWTSerializerWithExpiration',
     'JWT_TOKEN_CLAIMS_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer',
-		'USER_DETAILS_SERIALIZER': 'dj_rest_auth.serializers.UserDetailsSerializer',
+	'USER_DETAILS_SERIALIZER': 'dj_rest_auth.serializers.UserDetailsSerializer',
     'PASSWORD_RESET_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetSerializer',
     'PASSWORD_RESET_CONFIRM_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetConfirmSerializer',
     'PASSWORD_CHANGE_SERIALIZER': 'dj_rest_auth.serializers.PasswordChangeSerializer',
@@ -190,23 +205,45 @@ REST_FRAMEWORK = {
     ),
 }
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_EMAIL_REQUIRED = False
-
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    # 'AUTH_HEADER_TYPES': ('Bearer',),
+    # 'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    # 'USER_ID_FIELD': 'id',
+    # 'USER_ID_CLAIM': 'user_id',
+    # 'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+    # 'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    # 'TOKEN_TYPE_CLAIM': 'token_type',
+    # 'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 }
+
+# 사이트는 1개만 사용할 것이라고 명시
+SITE_ID = 1
+
+REST_USE_JWT = True
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+# ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/?verification=1'
+# ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
+
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None    # username 필드 사용 x
+# ACCOUNT_EMAIL_REQUIRED = True               # email 필드 사용 o
+# ACCOUNT_USERNAME_REQUIRED = False           # username 필드 사용 x
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
@@ -214,3 +251,4 @@ CORS_ORIGIN_WHITELIST = [
     "https://port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app"]
 
 CORS_ALLOW_CREDENTIALS = True
+
