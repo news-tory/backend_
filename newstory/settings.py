@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta  # 추가
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # take environment variables from .env.
+
+GUARDIAN_API_KEY = os.getenv("GUARDIAN_API_KEY")
+NYT_API_KEY = os.getenv("NYT_API_KEY")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +34,7 @@ SECRET_KEY = 'django-insecure-49jm!(76tq2p$33vrk2w0db-w%&ji7)w7xmo(il^%-jxx(&^fz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app', '127.0.0.1']
 
 
 # Application definition
@@ -56,10 +64,17 @@ INSTALLED_APPS = [
 	'allauth',
 	'allauth.account',
 
+
     # social login 관련
 	'allauth.socialaccount',
     # allauth.socialaccount.providers.소셜로그인제공업체
     'allauth.socialaccount.providers.google',   
+
+	# simple-jwt 관련 관련
+	'rest_framework_simplejwt',
+    # cors
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -70,6 +85,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'newstory.urls'
@@ -128,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -194,6 +210,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
+
     # 'AUTH_HEADER_TYPES': ('Bearer',),
     # 'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     # 'USER_ID_FIELD': 'id',
@@ -226,3 +243,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://127.0.0.1:8000",
+    "https://port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app"]
+
+CORS_ALLOW_CREDENTIALS = True
+
