@@ -68,10 +68,9 @@ INSTALLED_APPS = [
     # social login 관련
 	'allauth.socialaccount',
     # allauth.socialaccount.providers.소셜로그인제공업체
-    'allauth.socialaccount.providers.google',   
+    'allauth.socialaccount.providers.google',
 
 	# simple-jwt 관련 관련
-	'rest_framework_simplejwt',
     # cors
     'corsheaders',
 

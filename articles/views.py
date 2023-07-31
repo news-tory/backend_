@@ -18,7 +18,6 @@ class InitDBView(APIView):
         res = requests.get(url)
         articles = res.json()['response']['results']
 
-
         for article in articles:
             news_data = Article()
             news_data.title = article['webTitle']
@@ -48,7 +47,8 @@ def init_NYT_db(request):
             news_data.save()
         except:
             pass
-        
+
+
 class NYTView(APIView):
     def get(self, request):
         articles = Article.objects.filter(paper='NYT')
