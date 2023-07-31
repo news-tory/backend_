@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-49jm!(76tq2p$33vrk2w0db-w%&ji7)w7xmo(il^%-jxx(&^fz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app/', '127.0.0.1']
 
 
 # Application definition
@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'newstory.urls'
@@ -204,3 +205,9 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
     'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 }
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://127.0.0.1:8000"]
+
+CORS_ALLOW_CREDENTIALS = True
