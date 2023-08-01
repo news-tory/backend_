@@ -12,6 +12,7 @@ django-dotenv==1.4.2
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 idna==3.4
+mysqlclient==2.2.0
 oauthlib==3.2.2
 pycparser==2.21
 PyJWT==2.8.0
