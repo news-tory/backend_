@@ -113,8 +113,12 @@ WSGI_APPLICATION = 'newstory.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hackDB_Schema',
+        'USER' : 'root',
+        'PASSWORD' : '1234',
+        'HOST' : 'svc.sel4.cloudtype.app',
+        'PORT' : '31138'
     }
 }
 
