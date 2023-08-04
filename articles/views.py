@@ -1,32 +1,16 @@
 from django.shortcuts import render
 import requests
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from .models import Article, Guardian
-from .serializers import ArticleSerializer, GuardianSerializer
+# from .models import NYT, Guardian, NYT_Comment, Guardian_Comment
+from .models import NYT, Guardian, Guardian_Comment, NYT_Comment
+from .serializers import NYTSerializer, GuardianSerializer, NYT_CommentSerializer, Guardian_CommentSerializer
 from rest_framework import generics
+from rest_framework.generics import ListCreateAPIView
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
-
-# base_url = 'https://content.guardianapis.com/search'
-# class InitDBView(APIView):
-#     def get(self, request):
-#         url = f'{base_url}?api-key={settings.GUARDIAN_API_KEY}'
-#         res = requests.get(url)
-#         articles = res.json()['response']['results']
-
-#         for article in articles:
-#             news_data = Article()
-#             news_data.title = article['webTitle']
-#             news_data.url = article['webUrl']
-#             # news_data.date = article['webPublicationDate']
-#             news_data.section = article['sectionName']
-#             news_data.save()
-        
-#         articles = Article.objects.all()
-#         serializer = ArticleSerializer(articles, many=True)
-#         return Response(serializer.data)
 
 
 # 가디언
@@ -60,7 +44,7 @@ def init_NYT_db(request):
     articles = res.json()['results']
     for article in articles:
         try:
-            news_data = Article()
+            news_data = NYT()
             news_data.title = article['title']
             news_data.abstract = article['abstract']
             news_data.url = article['url']
@@ -74,6 +58,54 @@ def init_NYT_db(request):
 
 class NYTView(APIView):
     def get(self, request):
-        articles = Article.objects.filter(paper='NYT')
-        serializer = ArticleSerializer(articles, many=True)
+        articles = NYT.objects.filter(paper='NYT')
+        serializer = NYTSerializer(articles, many=True)
+        return Response(serializer.data)
+    
+
+
+class NYTComment(ListCreateAPIView):
+    queryset = NYT_Comment.objects.all()
+    serializer_class =NYT_CommentSerializer
+
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        article_id = self.kwargs['pk']
+        return NYT_Comment.objects.filter(post=article_id)
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user = user)
+
+
+
+class GuardianComment(ListCreateAPIView):
+    queryset = Guardian_Comment.objects.all()
+    serializer_class = Guardian_CommentSerializer
+
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        article_id = self.kwargs['pk']
+        return Guardian_Comment.objects.filter(post=article_id)
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user = user)
+
+
+class NYTDetail(APIView):
+    def get(self, request, pk):
+        article = get_object_or_404(NYT, pk=pk)
+        serializer = NYTSerializer(article)
+        return Response(serializer.data)
+
+
+class GuardianDetail(APIView):
+    def get(self, request, pk):
+        article = get_object_or_404(Guardian, pk=pk)
+        serializer = GuardianSerializer(article)
         return Response(serializer.data)
