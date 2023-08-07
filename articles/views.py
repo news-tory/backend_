@@ -2,36 +2,58 @@ from django.shortcuts import render
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Article
-from .serializers import ArticleSerializer
+from .models import Article, Guardian
+from .serializers import ArticleSerializer, GuardianSerializer
 from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
 
-base_url = 'https://content.guardianapis.com/search'
+# base_url = 'https://content.guardianapis.com/search'
+# class InitDBView(APIView):
+#     def get(self, request):
+#         url = f'{base_url}?api-key={settings.GUARDIAN_API_KEY}'
+#         res = requests.get(url)
+#         articles = res.json()['response']['results']
 
-# @csrf_exempt
-class InitDBView(APIView):
-    def get(self, request):
-        url = f'{base_url}?api-key={settings.GUARDIAN_API_KEY}'
-        res = requests.get(url)
-        articles = res.json()['response']['results']
+#         for article in articles:
+#             news_data = Article()
+#             news_data.title = article['webTitle']
+#             news_data.url = article['webUrl']
+#             # news_data.date = article['webPublicationDate']
+#             news_data.section = article['sectionName']
+#             news_data.save()
+        
+#         articles = Article.objects.all()
+#         serializer = ArticleSerializer(articles, many=True)
+#         return Response(serializer.data)
 
 
-        for article in articles:
-            news_data = Article()
+# 가디언
+def init_Guardian_db(request):
+    url = f"https://content.guardianapis.com/search?api-key={settings.GUARDIAN_API_KEY}"
+    res = requests.get(url)
+    articles = res.json()['response']['results']
+    for article in articles:
+        try:
+            news_data = Guardian()
             news_data.title = article['webTitle']
             news_data.url = article['webUrl']
-            # news_data.date = article['webPublicationDate']
             news_data.section = article['sectionName']
             news_data.save()
-        
-        articles = Article.objects.all()
-        serializer = ArticleSerializer(articles, many=True)
+        except:
+            pass
+
+
+
+class GUARDIAN_View(APIView):
+    def get(self, request):
+        articles = Guardian.objects.all()
+        serializer = GuardianSerializer(articles, many=True)
         return Response(serializer.data)
 
 
+# 뉴욕타임즈
 def init_NYT_db(request):
     url = f"https://api.nytimes.com/svc/topstories/v2/home.json?api-key={settings.NYT_API_KEY}"
     res = requests.get(url)
@@ -48,7 +70,8 @@ def init_NYT_db(request):
             news_data.save()
         except:
             pass
-        
+
+
 class NYTView(APIView):
     def get(self, request):
         articles = Article.objects.filter(paper='NYT')

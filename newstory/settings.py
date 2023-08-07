@@ -57,11 +57,15 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'dj_rest_auth.registration',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',   # allauth.socialaccount.providers.소셜로그인제공업체  
-    
+	'allauth',
+	'allauth.account',
+
+
+    # social login 관련
+	'allauth.socialaccount',
+    # allauth.socialaccount.providers.소셜로그인제공업체
+    'allauth.socialaccount.providers.google',
+
     # cors
     'corsheaders',
 
@@ -102,10 +106,21 @@ WSGI_APPLICATION = 'newstory.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'hackDB_Schema',
+        'USER': 'root',
+        'PASSWORD': '1234',
+        'HOST': 'svc.sel4.cloudtype.app',
+        'PORT': '31138'
     }
 }
 
