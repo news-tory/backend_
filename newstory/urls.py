@@ -23,11 +23,7 @@ urlpatterns = [
 
     path('articles/', include('articles.urls')),
 
-    path('accounts/', include('dj_rest_auth.urls')),
-    path('accounts/', include('dj_rest_auth.registration.urls')),
-    path('accounts/', include('allauth.urls')),
-    path('accounts/', include('accounts.urls')),
-
-    # path('dj/', include('dj_rest_auth.registration.urls')),
-    # path('dj/registration', include('dj_rest_auth.registration.urls')),
+    path('accounts/', include('accounts.urls')),    # 커스텀 유저 모델
+    path('accounts/', include('allauth.urls')), # 추가한 라이브러리 매핑
+    path('accounts/', include('dj_rest_auth.urls'))  
 ]
