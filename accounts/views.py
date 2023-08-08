@@ -100,6 +100,7 @@ class AuthAPIView(APIView):
 
         # 유저 인증
         user = authenticate(
+            nickname=request.data.get("nickname"),
             email=request.data.get("email"), 
             password=request.data.get("password")
         )
