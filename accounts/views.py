@@ -6,8 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
-from newstory.settings import SECRET_KEY
-from django.conf import settings
+from newstory.settings import SECRET_KEY, SOCIAL_AUTH_GOOGLE_CLIENT_ID, SOCIAL_AUTH_GOOGLE_SECRET,STATE
 
 # UserViewSet
 from rest_framework import viewsets
@@ -101,7 +100,6 @@ class AuthAPIView(APIView):
 
         # 유저 인증
         user = authenticate(
-            nickname=request.data.get("nickname"),
             email=request.data.get("email"), 
             password=request.data.get("password")
         )
@@ -161,22 +159,22 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 # 구글 소셜로그인 변수 설정
-state = settings.STATE
+state = os.getenv("STATE")
 BASE_URL = 'http://localhost:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
 
 # 구글 로그인
 def google_login(request):
     scope = "https://www.googleapis.com/auth/userinfo.email"
-    client_id = settings.SOCIAL_AUTH_GOOGLE_CLIENT_ID
+    client_id = os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
     
     # 이 url로 들어가면 구글 로그인 창이 뜨고, 알맞은 아이디와 비번을 입력하면 callback URI로 코드값이 들어감
     return redirect(f"https://accounts.google.com/o/auth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
 
 # access token & email 요청 -> 회원가입/로그인 & jwt 발급
 def google_callback(request):
-    client_id = settings.SOCIAL_AUTH_GOOGLE_CLIENT_ID
-    client_secret = settings.SOCIAL_AUTH_GOOGLE_SECRET
+    client_id = os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_secret = os.getenv("SOCIAL_AUTH_GOOGLE_SECRET")
     code = request.GET.get('code')
 
     # 1. 받은 코드로 구글에 access token 요청
@@ -259,37 +257,3 @@ class GoogleLogin(SocialLoginView):
     adapter_class = google_view.GoogleOAuth2Adapter
     callback_url = GOOGLE_CALLBACK_URI
     client_class = OAuth2Client
-
-# 프로필 이미지 등록, 변경
-# class ProfileImage(APIView):
-#     parser_classes = (MultiPartParser, FormParser)
-
-#     def post(self, request, format=None):
-#         serializer = ProfileImageSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(status=status.HTTP_200_OK)
-#         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-#     def put(self, request, format=None):
-#         serializer = ProfileImageSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(status=status.HTTP_200_OK)
-#         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-# # 내가 쓴 피드
-# class MyFeed(APIView):
-#     def get(self, request, format=None):
-#         user = request.user
-#         feeds = Feed.objects.filter(user=user)
-#         serializer = FeedSerializer(feeds, many=True)
-#         return Response(serializer.data)
-
-# 스크랩한 기사
-# class ScrapedArticle(APIView):
-#     def get(self, request, format=None):
-#         user = request.user
-#         articles = Article.objects.filter(user=user)
-#         serializer = ArticleSerializer(articles, many=True)
-#         return Response(serializer.data)
