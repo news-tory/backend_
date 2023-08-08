@@ -155,3 +155,37 @@ class GoogleLogin(SocialLoginView):
     adapter_class = google_view.GoogleOAuth2Adapter
     callback_url = GOOGLE_CALLBACK_URI
     client_class = OAuth2Client
+
+# 프로필 이미지 등록, 변경
+# class ProfileImage(APIView):
+#     parser_classes = (MultiPartParser, FormParser)
+
+#     def post(self, request, format=None):
+#         serializer = ProfileImageSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(status=status.HTTP_200_OK)
+#         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+#     def put(self, request, format=None):
+#         serializer = ProfileImageSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(status=status.HTTP_200_OK)
+#         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# # 내가 쓴 피드
+# class MyFeed(APIView):
+#     def get(self, request, format=None):
+#         user = request.user
+#         feeds = Feed.objects.filter(user=user)
+#         serializer = FeedSerializer(feeds, many=True)
+#         return Response(serializer.data)
+
+# 스크랩한 기사
+# class ScrapedArticle(APIView):
+#     def get(self, request, format=None):
+#         user = request.user
+#         articles = Article.objects.filter(user=user)
+#         serializer = ArticleSerializer(articles, many=True)
+#         return Response(serializer.data)
