@@ -20,6 +20,9 @@ load_dotenv()  # take environment variables from .env.
 GUARDIAN_API_KEY = os.getenv("GUARDIAN_API_KEY")
 NYT_API_KEY = os.getenv("NYT_API_KEY")
 
+SOCIAL_AUTH_GOOGLE_CLIENT_ID = os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+SOCIAL_AUTH_GOOGLE_SECRET = os.getenv("SOCIAL_AUTH_GOOGLE_SECRET")
+STATE = os.getenv("STATE")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
