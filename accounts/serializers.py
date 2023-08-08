@@ -16,4 +16,3 @@ class UserSerializer(serializers.ModelSerializer):  # 회원가입 & 로그인 �
             **validated_data
         )
         return user
-
