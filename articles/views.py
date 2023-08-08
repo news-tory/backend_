@@ -116,3 +116,4 @@ class GuardianDetail(APIView):
         article = get_object_or_404(Guardian, pk=pk)
         serializer = GuardianSerializer(article)
         return Response(serializer.data)
+

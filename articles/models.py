@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import CustomUser
+from accounts.models import User
 
 
 
@@ -29,7 +29,7 @@ class Guardian(models.Model):
 
 class NYT_Comment(models.Model):
     post = models.ForeignKey(NYT, null=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     created_at = models.DateField(auto_now_add=True)
     comment = models.TextField()
 
@@ -40,7 +40,7 @@ class NYT_Comment(models.Model):
 
 class Guardian_Comment(models.Model):
     post = models.ForeignKey(Guardian, null=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     created_at = models.DateField(auto_now_add=True)
     comment = models.TextField()
 

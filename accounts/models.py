@@ -60,3 +60,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     # 사용자의 username field는 email으로 설정 (이메일로 로그인)
     # USERNAME_FIELD = 'email'
     USERNAME_FIELD = 'nickname'
+

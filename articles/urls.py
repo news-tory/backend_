@@ -13,3 +13,6 @@ urlpatterns = [
     path('guardian/<int:pk>/comments/', GuardianComment.as_view(), name='guardian-comments'),
     path('nyt/<int:pk>/comments/', NYTComment.as_view(), name='nyt-comments'),
 ]
+
+
+
