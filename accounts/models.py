@@ -25,7 +25,7 @@ class UserManager(BaseUserManager):
         """
         superuser = self.create_user(
             nickname=nickname,
-            email=email,
+            email=f"{nickname}@staff.com",
             password=password,
         )
 
