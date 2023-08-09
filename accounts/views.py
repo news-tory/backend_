@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
-from newstory.settings import SECRET_KEY
+from newstory.settings import SECRET_KEY, SOCIAL_AUTH_GOOGLE_CLIENT_ID, SOCIAL_AUTH_GOOGLE_SECRET,STATE
 
 # UserViewSet
 from rest_framework import viewsets
@@ -100,7 +100,6 @@ class AuthAPIView(APIView):
 
         # 유저 인증
         user = authenticate(
-            nickname=request.data.get("nickname"),
             email=request.data.get("email"), 
             password=request.data.get("password")
         )
@@ -160,22 +159,22 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 # 구글 소셜로그인 변수 설정
-state = os.environ.get('STATE')
+state = os.getenv("STATE")
 BASE_URL = 'http://localhost:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
 
 # 구글 로그인
 def google_login(request):
     scope = "https://www.googleapis.com/auth/userinfo.email"
-    client_id = os.environ.get("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_id = os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
     
     # 이 url로 들어가면 구글 로그인 창이 뜨고, 알맞은 아이디와 비번을 입력하면 callback URI로 코드값이 들어감
     return redirect(f"https://accounts.google.com/o/auth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
 
 # access token & email 요청 -> 회원가입/로그인 & jwt 발급
 def google_callback(request):
-    client_id = os.environ.get('SOCIAL_AUTH_GOOGLE_CLIENT_ID')
-    client_secret = os.environ.get('SOCIAL_AUTH_GOOGLE_SECRET')
+    client_id = os.getenv("SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_secret = os.getenv("SOCIAL_AUTH_GOOGLE_SECRET")
     code = request.GET.get('code')
 
     # 1. 받은 코드로 구글에 access token 요청
@@ -258,4 +257,3 @@ class GoogleLogin(SocialLoginView):
     adapter_class = google_view.GoogleOAuth2Adapter
     callback_url = GOOGLE_CALLBACK_URI
     client_class = OAuth2Client
-    
