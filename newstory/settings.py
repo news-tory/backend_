@@ -14,8 +14,10 @@ from pathlib import Path
 from datetime import timedelta  # 추가
 from dotenv import load_dotenv
 import os
+import pymysql
 
 load_dotenv()  # take environment variables from .env.
+pymysql.install_as_MySQLdb()
 
 GUARDIAN_API_KEY = os.getenv("GUARDIAN_API_KEY")
 NYT_API_KEY = os.getenv("NYT_API_KEY")

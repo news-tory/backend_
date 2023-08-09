@@ -14,7 +14,6 @@ djangorestframework-simplejwt==5.2.2
 docx==0.2.4
 idna==3.4
 lxml==4.9.3
-mysqlclient==2.2.0
 oauthlib==3.2.2
 Pillow==10.0.0
 pycparser==2.21
