@@ -2,7 +2,7 @@ import jwt
 from rest_framework.views import APIView
 from .serializers import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
-from rest_framework import status
+from rest_framework import status, exceptions
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
@@ -152,6 +152,20 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         serializer = self.serializer_class(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    def post(self, request):
+        password = request.data['password']
+
+        if request.user.check_password(password):
+            response = Response(
+            {
+            "message": "Correct password!"
+            },
+            status=status.HTTP_202_ACCEPTED
+            )
+            return response
+        elif not request.user.check_password(password):
+            raise exceptions.AuthenticationFailed("Incorrect password!")
+
     def patch(self, request, *args, **kwargs):
         serializer_data = request.data
 

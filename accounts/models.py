@@ -16,7 +16,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-    
+        
     def create_superuser(self, email=None, password=None, **extra_fields):
         """
         주어진 이메일, 비밀번호 등 개인정보로 User 인스턴스 생성
