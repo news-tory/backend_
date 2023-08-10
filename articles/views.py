@@ -11,6 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from datetime import datetime
+from django.utils import timezone
 
 
 
@@ -83,8 +85,16 @@ def init_integrate_db(request):
         'music': 'Culture',
         'tv-and-radio': 'Culture',
     }
-
+    
+    current_time = timezone.now()
     for article in nyt_articles:
+        article['loaded_at'] = current_time
+
+    for article in guardian_articles:
+        article['loaded_at'] = current_time
+
+    sorted_nyt_articles = sorted(nyt_articles, key=lambda article: article['loaded_at'])
+    for article in sorted_nyt_articles:
         try:
             news_data = Article()
             news_data.title = article['title']
@@ -100,7 +110,9 @@ def init_integrate_db(request):
         except:
             pass
 
-        for article in guardian_articles:
+        
+        sorted_guardian_articles = sorted(guardian_articles, key=lambda article: article['loaded_at'])
+        for article in sorted_guardian_articles:
             try:
                 news_data = Article()
                 news_data.title = article['webTitle']
