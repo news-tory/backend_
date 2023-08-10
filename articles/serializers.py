@@ -3,18 +3,22 @@ from .models import NYT, Guardian, NYT_Comment, Guardian_Comment
 
 
 class NYT_CommentSerializer(serializers.ModelSerializer):
-    # user = serializers.ReadOnlyField(source = 'user.nickname')
+    user = serializers.ReadOnlyField(source = 'user.nickname')
     class Meta:
         model = NYT_Comment
-        fields = ['post', 'created_at', 'comment']
+        fields = ['post', 'user', 'created_at', 'comment']
+        read_only_fields = ['user']
 
 
 
 class Guardian_CommentSerializer(serializers.ModelSerializer):
-    # user = serializers.ReadOnlyField(source = 'user.nickname')
+    user = serializers.ReadOnlyField(source = 'user.nickname')
+    post = serializers.PrimaryKeyRelatedField(queryset=NYT.objects.all(), write_only=True)
+
     class Meta:
         model = Guardian_Comment
-        fields = ['post', 'created_at', 'comment']
+        fields = ['post', 'user', 'created_at', 'comment']
+        read_only_fields = ['user']
 
 
 
