@@ -3,27 +3,26 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 # 헬퍼 클래스
 class UserManager(BaseUserManager):
-    def create_user(self, nickname, email, password, **kwargs):
+    def create_user(self, email, password, **extra_fields):
         """
         주어진 이메일, 비밀번호 등 개인정보로 인스턴스 생성
         """
         if not email:
             raise ValueError('Users must have an email address')
         user = self.model(
-            nickname=nickname,
             email=email,
+            **extra_fields
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, nickname=None, email=None, password=None, **extra_fields):
+    def create_superuser(self, email=None, password=None, **extra_fields):
         """
         주어진 이메일, 비밀번호 등 개인정보로 User 인스턴스 생성
         단, 최상위 사용자이므로 권한을 부여
         """
         superuser = self.create_user(
-            nickname=nickname,
             email=email,
             password=password,
         )
@@ -47,6 +46,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     nickname = models.CharField(max_length=120, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
+    sport = models.BooleanField(default=False)
+    world = models.BooleanField(default=False)
+    art = models.BooleanField(default=False)
+    film = models.BooleanField(default=False)
+    society = models.BooleanField(default=False)
+    books = models.BooleanField(default=False)
+    business = models.BooleanField(default=False)
+    tech = models.BooleanField(default=False)
+    culture = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -58,5 +66,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     # 사용자의 username field는 email으로 설정 (이메일로 로그인)
-    # USERNAME_FIELD = 'email'
-    USERNAME_FIELD = 'nickname'
+    USERNAME_FIELD = 'email'
