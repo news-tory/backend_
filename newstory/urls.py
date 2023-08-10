@@ -22,8 +22,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 
     path('articles/', include('articles.urls')),
+    path('community/', include('community.urls')),
 
     path('accounts/', include('accounts.urls')),    # 커스텀 유저 모델
     path('accounts/', include('allauth.urls')), # 추가한 라이브러리 매핑
-    path('accounts/', include('dj_rest_auth.urls'))  
+    path('accounts/', include('dj_rest_auth.urls')),
 ]
