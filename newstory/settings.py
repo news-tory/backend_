@@ -14,10 +14,10 @@ from pathlib import Path
 from datetime import timedelta  # 추가
 from dotenv import load_dotenv
 import os
-import pymysql
+# import pymysql
 
 load_dotenv()  # take environment variables from .env.
-pymysql.install_as_MySQLdb()
+# pymysql.install_as_MySQLdb()
 
 GUARDIAN_API_KEY = os.getenv("GUARDIAN_API_KEY")
 NYT_API_KEY = os.getenv("NYT_API_KEY")
@@ -111,23 +111,23 @@ WSGI_APPLICATION = 'newstory.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'hackDB_Schema',
-        'USER': 'root',
-        'PASSWORD': '1234',
-        'HOST': 'svc.sel4.cloudtype.app',
-        'PORT': '31138'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'hackDB_Schema',
+#         'USER': 'root',
+#         'PASSWORD': '1234',
+#         'HOST': 'svc.sel4.cloudtype.app',
+#         'PORT': '31138'
+#     }
+# }
 
 
 # Password validation
@@ -207,6 +207,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'accounts.backends.JWTAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
