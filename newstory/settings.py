@@ -208,6 +208,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'accounts.backends.JWTAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }

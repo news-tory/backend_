@@ -1,13 +1,10 @@
 from rest_framework import serializers
-from .models import Article, Guardian
+from .models import Article
+
+
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = '__all__'
+        fields = ['id', 'title', 'abstract', 'url', 'img_url', 'section', 'paper']
 
-
-class GuardianSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Guardian
-        fields = '__all__'
