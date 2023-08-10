@@ -1,25 +1,17 @@
-from django.shortcuts import render
 import requests
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from .models import Article
 from .serializers import ArticleSerializer
-from rest_framework import generics
-from rest_framework.generics import ListCreateAPIView
-from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from datetime import datetime
-from django.utils import timezone
+
 
 
 
 
 class ArticleView(APIView):
     def get(self, request):
-        articles = Article.objects.all()
+        articles = Article.objects.all().order_by('time')
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
 
@@ -86,39 +78,30 @@ def init_integrate_db(request):
         'tv-and-radio': 'Culture',
     }
     
-    current_time = timezone.now()
     for article in nyt_articles:
-        article['loaded_at'] = current_time
-
-    for article in guardian_articles:
-        article['loaded_at'] = current_time
-
-    sorted_nyt_articles = sorted(nyt_articles, key=lambda article: article['loaded_at'])
-    for article in sorted_nyt_articles:
         try:
             news_data = Article()
             news_data.title = article['title']
             news_data.abstract = article['abstract']
             news_data.url = article['url']
             news_data.img_url = article['multimedia'][0]['url']
-
             section = article['section']
             news_data.section = section_mapping.get(section, 'etc')
-
+            news_data.time = article['time']
             news_data.paper = 'NewYorkTimes'
             news_data.save()
         except:
             pass
 
         
-        sorted_guardian_articles = sorted(guardian_articles, key=lambda article: article['loaded_at'])
-        for article in sorted_guardian_articles:
+        for article in guardian_articles:
             try:
                 news_data = Article()
                 news_data.title = article['webTitle']
                 news_data.url = article['webUrl']
                 section = article['sectionName']
                 news_data.section = section_mapping.get(section, 'etc')
+                news_data.time = article['time']
                 news_data.paper = 'Guardian'
                 news_data.save()
             except:
