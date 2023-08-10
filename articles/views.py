@@ -11,7 +11,7 @@ from django.conf import settings
 
 class ArticleView(APIView):
     def get(self, request):
-        articles = Article.objects.all().order_by('id')
+        articles = Article.objects.all().order_by('-id')
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
 
