@@ -1,23 +1,17 @@
-from django.shortcuts import render
 import requests
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from .models import Article
 from .serializers import ArticleSerializer
-from rest_framework import generics
-from rest_framework.generics import ListCreateAPIView
-from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 
 
 
 
 class ArticleView(APIView):
     def get(self, request):
-        articles = Article.objects.all()
+        articles = Article.objects.all().order_by('-id')
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
 
@@ -83,7 +77,7 @@ def init_integrate_db(request):
         'music': 'Culture',
         'tv-and-radio': 'Culture',
     }
-
+    
     for article in nyt_articles:
         try:
             news_data = Article()
@@ -91,15 +85,14 @@ def init_integrate_db(request):
             news_data.abstract = article['abstract']
             news_data.url = article['url']
             news_data.img_url = article['multimedia'][0]['url']
-
             section = article['section']
             news_data.section = section_mapping.get(section, 'etc')
-
             news_data.paper = 'NewYorkTimes'
             news_data.save()
         except:
             pass
 
+        
         for article in guardian_articles:
             try:
                 news_data = Article()
