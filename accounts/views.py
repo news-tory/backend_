@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from .serializers import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from rest_framework import status
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
@@ -141,15 +142,28 @@ class AuthAPIView(APIView):
         response.delete_cookie("access")
         response.delete_cookie("refresh")
         return response
+
+class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.serializer_class(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
-'''
-JWT는 서버 쪽에서 로그아웃을 할 수 없고, 한번 발급된 JWT 토큰을 강제로 삭제하거나 무효화할수도 없다. 
-그래서 보통 JWT 토큰의 유효기간을 짧게 하거나, 토큰을 DB에 보존하고 매 요청마다 로그아웃으로 인해 DB에서 삭제된 토큰인지 아닌지를 확인하는 방법을 쓴다고 한다. 
-그런데 이 방법들은 너무 귀찮기도 하고 복잡해서, 쿠키를 삭제하면 서버에서 유저를 확인할 방법이 없어지니까 단순하게 쿠키에 담긴 토큰을 지워주는 방향으로 갔다. 
+    def patch(self, request, *args, **kwargs):
+        serializer_data = request.data
 
-유저정보는 별도로 authorization에 jwt 토큰을 포함시켜주지 않아도 쿠키에 저장된 토큰으로 해당 사용자의 정보를 보여준다.
-'''
+        serializer = self.serializer_class(
+            request.user, data=serializer_data, partial=True
+        )
 
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 # jwt 토큰 인증 확인용 뷰셋
 # Header - Authorization : Bearer <발급받은토큰>
 class UserViewSet(viewsets.ModelViewSet):
