@@ -7,11 +7,11 @@ from accounts.models import User
 # 댓글(누가 썼는지, 프로필 이미지, 좋아요수, 내용)
 class Post(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)     # id
+    article = models.ForeignKey('articles.Article', null=False, on_delete=models.CASCADE)  # 기사 id
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)  # 작성자
     created_at = models.DateField(auto_now_add=True)                     # 작성일
     content = models.TextField()                                         # 내용
     like_cnt = models.IntegerField(default=0)                            # 추천 수
-    comment_cnt = models.IntegerField(default=0)                         # 댓글 수
 
     def __str__(self):
         return self.content
