@@ -6,7 +6,7 @@ class PostSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.nickname', read_only=True)
     class Meta:
         model = Post
-        fields = ['id', 'user', 'content', 'created_at', 'like_cnt']
+        fields = ['id', 'user', 'content', 'created_at', 'like_cnt', 'article']
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.nickname', read_only=True)
@@ -19,7 +19,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True, source='comment_set')
     class Meta:
         model = Post
-        fields = ['id', 'user', 'content', 'created_at', 'like_cnt', 'comments']
+        fields = ['id', 'user', 'content', 'created_at', 'like_cnt', 'comments', 'article']
 
 class PostLikeSerializer(serializers.ModelSerializer):
     class Meta:
