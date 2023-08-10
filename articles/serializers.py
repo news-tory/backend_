@@ -39,7 +39,7 @@ class GuardianSerializer(serializers.ModelSerializer):
     comment = serializers.SerializerMethodField()
     class Meta:
         model = Guardian
-        fields = ['id', 'title', 'url', 'section', 'comment']
+        fields = ['id', 'title', 'url', 'section', 'paper', 'comment']
 
     def get_comment(self, obj):
         comment = Guardian_Comment.objects.filter(post=obj)

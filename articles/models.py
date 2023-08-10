@@ -20,6 +20,7 @@ class Guardian(models.Model):
     title = models.CharField(max_length=100, unique=True)   # 기사 제목
     url = models.URLField(max_length=1024)     # 기사 URL
     section = models.CharField(max_length=30)  # 기사 태그
+    paper = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return self.title

@@ -79,6 +79,7 @@ def init_Guardian_db(request):
             news_data.title = article['webTitle']
             news_data.url = article['webUrl']
             news_data.section = article['sectionName']
+            news_data.paper = 'Guardian'
             news_data.save()
         except:
             pass
