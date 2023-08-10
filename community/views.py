@@ -65,13 +65,8 @@ class CommentView(APIView):   # 댓글 리스트
 class CommentDetailView(APIView):   # 댓글 상세
     authentication_classes = [JWTAuthentication]
     
-    def get(self, request, pk):
-        comment = get_object_or_404(Comment, pk=pk)
-        serializer = CommentSerializer(comment)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def put(self, request, pk):
-        comment = get_object_or_404(Comment, pk=pk)
+    def put(self, request, post_id, comment_id):
+        comment = get_object_or_404(Comment, pk=comment_id)
         serializer = CommentSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
@@ -79,7 +74,7 @@ class CommentDetailView(APIView):   # 댓글 상세
         else:
             return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, pk):
-        comment = get_object_or_404(Comment, pk=pk)
+    def delete(self, request, post_id, comment_id):
+        comment = get_object_or_404(Comment, pk=comment_id)
         comment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': '삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
