@@ -11,7 +11,7 @@ from django.conf import settings
 
 class ArticleView(APIView):
     def get(self, request):
-        articles = Article.objects.all().order_by('time')
+        articles = Article.objects.all().order_by('id')
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
 
@@ -87,7 +87,6 @@ def init_integrate_db(request):
             news_data.img_url = article['multimedia'][0]['url']
             section = article['section']
             news_data.section = section_mapping.get(section, 'etc')
-            news_data.time = article['time']
             news_data.paper = 'NewYorkTimes'
             news_data.save()
         except:
@@ -101,7 +100,6 @@ def init_integrate_db(request):
                 news_data.url = article['webUrl']
                 section = article['sectionName']
                 news_data.section = section_mapping.get(section, 'etc')
-                news_data.time = article['time']
                 news_data.paper = 'Guardian'
                 news_data.save()
             except:
