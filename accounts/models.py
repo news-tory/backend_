@@ -4,6 +4,14 @@ import os
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
+def rename_imagefile_to_nickname(instance, filename):
+    upload_to = f'user_images/'
+    ext = filename.split('.')[-1]
+    title = "nickname"
+    filename = '{}.{}'.format(title, ext)
+
+    return os.path.join(upload_to, filename)
+
 class OverwriteStorage(FileSystemStorage):
     '''
     file 같은 이름 존재할 경우 overwrite
@@ -60,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     nickname = models.CharField(max_length=120, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
-    userImg = models.ImageField(upload_to='static', storage=OverwriteStorage(), null=True)
+    userImg = models.ImageField(upload_to="user", storage=OverwriteStorage(), null=True)
     Sport = models.BooleanField(default=False)
     World = models.BooleanField(default=False)
     Art = models.BooleanField(default=False)
