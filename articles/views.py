@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from .models import Article
 from .serializers import ArticleSerializer
 from django.conf import settings
+from community.models import Post
+from django.shortcuts import get_object_or_404
+from rest_framework import status
 
 
 
@@ -13,7 +16,22 @@ class ArticleView(APIView):
     def get(self, request):
         articles = Article.objects.all().order_by('-id')
         serializer = ArticleSerializer(articles, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+class PopularityView(APIView):
+    def get(self, request):
+        articles = Article.objects.all().order_by('-popularity')
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ArticleDetail(APIView):
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        serializer = ArticleSerializer(article)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 def get_guardian_data(request):
@@ -88,6 +106,8 @@ def init_integrate_db(request):
             section = article['section']
             news_data.section = section_mapping.get(section, 'etc')
             news_data.paper = 'NewYorkTimes'
+
+
             news_data.save()
         except:
             pass
@@ -101,15 +121,10 @@ def init_integrate_db(request):
                 section = article['sectionName']
                 news_data.section = section_mapping.get(section, 'etc')
                 news_data.paper = 'Guardian'
+
                 news_data.save()
             except:
                 pass
 
 
 
-
-# class GuardianDetail(APIView):
-#     def get(self, request, pk):
-#         article = get_object_or_404(Guardian, pk=pk)
-#         serializer = GuardianSerializer(article)
-#         return Response(serializer.data)

@@ -9,6 +9,7 @@ class Article(models.Model):
     img_url = models.URLField(max_length=1024, default="https://i.guim.co.uk/img/media/29154973f074960f0af69cc6dd7f29cd56de0967/0_50_2016_1210/master/2016.jpg?width=620&dpr=1&s=none")
     section = models.CharField(max_length=30)
     paper = models.CharField(max_length=100)
+    published_date = models.CharField(max_length=1024, null=True)
 
 
     def __str__(self):
