@@ -3,9 +3,10 @@ from rest_framework import urls
 from .views import *
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'accounts'
-
 
 router = routers.DefaultRouter()
 router.register('list', UserViewSet)    # 유저리스트 (테스트용)
@@ -21,4 +22,4 @@ urlpatterns = [
     path("google/login", google_login, name='google_login'),
     path('google/callback/', google_callback, name='google_callback'),
     path('google/login/finish/', GoogleLogin.as_view(), name='google_login_todjango'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
