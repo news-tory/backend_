@@ -1,5 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+import os
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
+class OverwriteStorage(FileSystemStorage):
+    '''
+    file 같은 이름 존재할 경우 overwrite
+    '''
+    def get_available_name(self, name, max_length=None):
+        if self.exists(name):
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
+        return name
 
 # 헬퍼 클래스
 class UserManager(BaseUserManager):
@@ -46,15 +58,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     nickname = models.CharField(max_length=120, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
-    sport = models.BooleanField(default=False)
-    world = models.BooleanField(default=False)
-    art = models.BooleanField(default=False)
-    film = models.BooleanField(default=False)
-    society = models.BooleanField(default=False)
-    books = models.BooleanField(default=False)
-    business = models.BooleanField(default=False)
-    tech = models.BooleanField(default=False)
-    culture = models.BooleanField(default=False)
+    userImg = models.ImageField(upload_to='static', storage=OverwriteStorage(), null=True)
+
+    Sport = models.BooleanField(default=False)
+    World = models.BooleanField(default=False)
+    Art = models.BooleanField(default=False)
+    Film = models.BooleanField(default=False)
+    Society = models.BooleanField(default=False)
+    Books = models.BooleanField(default=False)
+    Business = models.BooleanField(default=False)
+    Tech = models.BooleanField(default=False)
+    Culture = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
