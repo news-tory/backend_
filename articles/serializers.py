@@ -7,11 +7,14 @@ class ArticleSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.nickname', read_only=True)
     like_cnt = serializers.IntegerField(source='article_like.count', read_only=True)
     post_cnt = serializers.IntegerField(source='article_post_set.count', read_only=True)
+    popularity = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
-        fields = ['id', 'title', 'abstract', 'url', 'img_url', 'section', 'paper', 'published_date']
-
+        fields = ['id', 'user', 'title', 'abstract', 'url', 'img_url', 'section', 'paper', 'published_date', 'like_cnt', 'post_cnt', 'popularity']
+    
+    def get_popularity(self, obj):
+        return obj.article_post_set.count() + obj.article_like.count()
 
 
 class ArticleLikeSerializer(serializers.ModelSerializer):
