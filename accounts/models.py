@@ -13,6 +13,7 @@ class OverwriteStorage(FileSystemStorage):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
 
+
 # 헬퍼 클래스
 class UserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -46,6 +47,7 @@ class UserManager(BaseUserManager):
         superuser.save(using=self._db)
         return superuser
 
+
 # AbstractBaseUser를 상속해서 유저 커스텀
 """
 AbstractBaseUser 모델을 상속한 User 커스텀 모델은 
@@ -59,7 +61,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(max_length=120, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=30, unique=True, null=False, blank=False)
     userImg = models.ImageField(upload_to='static', storage=OverwriteStorage(), null=True)
-
     Sport = models.BooleanField(default=False)
     World = models.BooleanField(default=False)
     Art = models.BooleanField(default=False)
