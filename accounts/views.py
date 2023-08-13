@@ -166,17 +166,16 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
             raise exceptions.AuthenticationFailed("Incorrect password!")
 
     def patch(self, request, *args, **kwargs):
-        serializer_data = request.data
-
+        data = request.data.copy()
+        data['userImg'].name = str(request.user.id) + '.png'
         serializer = self.serializer_class(
-            request.user, data=serializer_data, partial=True
+        request.user, data=data, partial=True
         )
-
-        serializer.is_valid(raise_exception=True)
-
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
     
 # jwt 토큰 인증 확인용 뷰셋
 # Header - Authorization : Bearer <발급받은토큰>
