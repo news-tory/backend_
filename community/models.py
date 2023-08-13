@@ -1,3 +1,4 @@
+from typing import Collection, Optional
 from django.db import models
 from accounts.models import User
 
@@ -11,7 +12,6 @@ class Post(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)  # 작성자
     created_at = models.DateField(auto_now_add=True)                     # 작성일
     content = models.TextField()                                         # 내용
-    like_cnt = models.IntegerField(default=0)                            # 추천 수
 
     def __str__(self):
         return self.content
@@ -27,8 +27,10 @@ class Comment(models.Model):
         return self.content
 
 class Post_Like(models.Model):
-    post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)  # 게시글 번호
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)  # 좋아요 누른 유저
+    post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE, related_name='post_like_set')  # 게시글 번호
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='post_like_set')  # 좋아요 누른 유저
+    # related_name을 설정해주면, post.post_like_set.all() 에서처럼 set으로 사용할 수 있음
+    
 
     def __str__(self):
         return self.user.username

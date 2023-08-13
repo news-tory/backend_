@@ -78,3 +78,15 @@ class CommentDetailView(APIView):   # 댓글 상세
         comment = get_object_or_404(Comment, pk=comment_id)
         comment.delete()
         return Response({'message': '삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
+
+class PostLikeView(APIView):   # 게시글 좋아요
+    authentication_classes = [JWTAuthentication]
+    
+    def post(self, request, post_id):
+        post = get_object_or_404(Post, pk=post_id)
+        serializer = PostLikeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, post=post)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
