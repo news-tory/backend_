@@ -116,23 +116,23 @@ WSGI_APPLICATION = 'newstory.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'hackDB_Schema',
-        'USER': 'root',
-        'PASSWORD': '1234',
-        'HOST': 'svc.sel4.cloudtype.app',
-        'PORT': '31138'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'hackDB_Schema',
+#         'USER': 'root',
+#         'PASSWORD': '1234',
+#         'HOST': 'svc.sel4.cloudtype.app',
+#         'PORT': '31138'
+#     }
+# }
 
 
 # Password validation
@@ -220,7 +220,7 @@ REST_FRAMEWORK = {
 
 # 추가적인 JWT 설정 (다 쓸 필요는 없음)
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
