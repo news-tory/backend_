@@ -29,6 +29,8 @@ class Comment(models.Model):
 class Post_Like(models.Model):
     post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE, related_name='post_like_set')  # 게시글 번호
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='post_like_set')  # 좋아요 누른 유저
+    # related_name을 설정해주면, post.post_like_set.all() 에서처럼 set으로 사용할 수 있음
+    
 
     def __str__(self):
         return self.user.username
