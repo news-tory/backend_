@@ -90,9 +90,3 @@ class PostLikeView(APIView):   # 게시글 좋아요
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, post_id):
-        post = get_object_or_404(Post, pk=post_id)
-        post_like = Post_Like.objects.filter(post=post, user=request.user)
-        post_like.delete()
-        return Response({'message': '삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
