@@ -1,10 +1,30 @@
 from rest_framework import serializers
-from .models import Article
-
+from .models import Article, Article_Like
+from community.models import Post
 
 
 class ArticleSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.nickname', read_only=True)
+    like_cnt = serializers.IntegerField(source='article_like.count', read_only=True)
+    post_cnt = serializers.IntegerField(source='article_post_set.count', read_only=True)
+
     class Meta:
         model = Article
         fields = ['id', 'title', 'abstract', 'url', 'img_url', 'section', 'paper', 'published_date']
 
+
+
+class ArticleLikeSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.nickname', read_only=True)
+    class Meta:
+        model = Article_Like
+        fields = '__all__'
+    
+    def create(self, validated_data):
+        post_like, created = Article_Like.objects.get_or_create(
+            post=validated_data['post'],
+            user=validated_data['user']
+        )
+        if not created:
+            post_like.delete()
+        return post_like
