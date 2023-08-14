@@ -2,11 +2,13 @@ import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Article
-from .serializers import ArticleSerializer
+from .serializers import ArticleSerializer, ArticleLikeSerializer
 from django.conf import settings
 from community.models import Post
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 
 
@@ -22,9 +24,11 @@ class ArticleView(APIView):
 
 class PopularityView(APIView):
     def get(self, request):
-        articles = Article.objects.all().order_by('-popularity')
-        serializer = ArticleSerializer(articles, many=True)
+        articles = Article.objects.all()
+        sorted_articles = sorted(articles, key=lambda article: article.article_post_set.count() + article.article_like.count(), reverse=True)
+        serializer = ArticleSerializer(sorted_articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class ArticleDetail(APIView):
@@ -32,6 +36,19 @@ class ArticleDetail(APIView):
         article = get_object_or_404(Article, pk=pk)
         serializer = ArticleSerializer(article)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class LikeArticle(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, request, post_id):
+        post = get_object_or_404(Post, pk=post_id)
+        serializer = ArticleLikeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, post=post)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_guardian_data(request):
@@ -106,6 +123,8 @@ def init_integrate_db(request):
             section = article['section']
             news_data.section = section_mapping.get(section, 'etc')
             news_data.paper = 'NewYorkTimes'
+            news_data.published_date = article['published_date']
+
 
 
             news_data.save()
