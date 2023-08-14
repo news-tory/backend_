@@ -167,7 +167,8 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         data = request.data.copy()
-        data['userImg'].name = str(request.user.id) + '.png'
+        if 'userImg' in data:
+            data['userImg'].name = str(request.user.id) + '.png'
         serializer = self.serializer_class(
         request.user, data=data, partial=True
         )
