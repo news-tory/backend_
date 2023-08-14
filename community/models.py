@@ -36,11 +36,3 @@ class Post_Like(models.Model):
 
     def __str__(self):
         return self.user.username
-
-
-class Article_Post(models.Model):
-    article = models.ForeignKey(Article, null=True, on_delete=models.CASCADE)  # 기사 id
-    post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)  # 게시글 id
-
-    def __str__(self):
-        return self.post.content

@@ -14,7 +14,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'title', 'abstract', 'url', 'img_url', 'section', 'paper', 'published_date', 'like_cnt', 'post_cnt', 'popularity']
     
     def get_popularity(self, obj):
-        return obj.article_post_set.count() + obj.article_like.count()
+        return Post.article_post_set.count() + obj.article_like.count()
 
 
 class ArticleLikeSerializer(serializers.ModelSerializer):
