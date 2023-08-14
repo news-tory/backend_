@@ -9,16 +9,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 
-
-
-
 class ArticleView(APIView):
     def get(self, request):
         articles = Article.objects.all().order_by('-id')
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-
 
 class PopularityView(APIView):
     def get(self, request):
