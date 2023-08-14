@@ -11,6 +11,7 @@ class Article(models.Model):
     section = models.CharField(max_length=30)
     paper = models.CharField(max_length=100)
     published_date = models.CharField(max_length=1024, null=True)
+    popularity = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
