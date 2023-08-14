@@ -24,9 +24,11 @@ class ArticleView(APIView):
 
 class PopularityView(APIView):
     def get(self, request):
-        articles = Article.objects.all().order_by('-popularity')
-        serializer = ArticleSerializer(articles, many=True)
+        articles = Article.objects.all()
+        sorted_articles = sorted(articles, key=lambda article: article.article_post_set.count() + article.article_like.count(), reverse=True)
+        serializer = ArticleSerializer(sorted_articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class ArticleDetail(APIView):
