@@ -149,7 +149,8 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def get(self, request, *args, **kwargs):
         serializer = self.serializer_class(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        user_image = serializer.data['userImg']
+        return Response(user_image, status=status.HTTP_200_OK)
     
     def post(self, request):        # 비밀번호 확인
         password = request.data['password']
