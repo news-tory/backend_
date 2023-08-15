@@ -78,6 +78,8 @@ INSTALLED_APPS = [
     # cors
     'corsheaders',
 
+    # Django-cleanup
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
