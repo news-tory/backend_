@@ -21,14 +21,12 @@ class ArticleView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-
 class PopularityView(APIView):
     def get(self, request):
         articles = Article.objects.all()
         sorted_articles = sorted(articles, key=lambda article: article.article_post_set.count() + article.article_like.count(), reverse=True)
         serializer = ArticleSerializer(sorted_articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 class ArticleDetail(APIView):
@@ -49,6 +47,15 @@ class LikeArticle(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLikeArticle(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request, nickname):
+        liked_articles = Article.objects.filter(article_like__user__nickname=nickname)
+        serializer = ArticleSerializer(liked_articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 def get_guardian_data(request):
