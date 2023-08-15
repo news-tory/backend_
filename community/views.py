@@ -12,7 +12,7 @@ class PostView(APIView):   # 게시글 리스트
     authentication_classes = [JWTAuthentication]
 
     def get(self, request):
-        post = Post.objects.all()
+        post = Post.objects.all().order_by('-id')
         serializer = PostSerializer(post, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
