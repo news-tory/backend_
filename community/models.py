@@ -35,4 +35,4 @@ class Post_Like(models.Model):
     # related_name을 설정해주면, post.post_like_set.all() 에서처럼 set으로 사용할 수 있음
 
     def __str__(self):
-        return self.user.username
+        return self.user.nickname
