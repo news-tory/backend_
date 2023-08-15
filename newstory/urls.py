@@ -15,8 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from articles.views import *
+from django.views.static import serve
+from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -27,4 +29,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),    # 커스텀 유저 모델
     path('accounts/', include('allauth.urls')), # 추가한 라이브러리 매핑
     path('accounts/', include('dj_rest_auth.urls')),
-]
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root':settings.MEDIA_ROOT}),
+] 
