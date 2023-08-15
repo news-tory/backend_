@@ -32,6 +32,24 @@ from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.google import views as google_view
 
+class UploadImageAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data['userImg'], status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        data = request.FILES
+        
+        serializer = UserSerializer(
+            request.user, data=data, partial=True
+        )       
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
 
 class RegisterAPIView(APIView):
     def post(self, request):
@@ -149,26 +167,9 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def get(self, request, *args, **kwargs):
         serializer = self.serializer_class(request.user)
-        user_image = serializer.data['userImg']
-        return Response(user_image, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):        # 비밀번호 확인
-        data = request.data
-
-        if 'userImg' in data:
-            data['userImg'].name = str(request.user.id) + '.png'
-            data['userImg'] = request.FILES['userImg']
-            serializer = self.serializer_class(
-                request.user, data=data, partial=True
-             )       
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
-        else:
-            pass
-            
         password = request.data['password']
 
         if request.user.check_password(password):
