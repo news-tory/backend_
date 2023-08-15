@@ -22,4 +22,4 @@ class Article_Like(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='article_like')
     
     def __str__(self):
-        return self.user.username
+        return self.user.nickname
