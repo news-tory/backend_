@@ -153,6 +153,22 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return Response(user_image, status=status.HTTP_200_OK)
     
     def post(self, request):        # 비밀번호 확인
+        data = request.data
+
+        if 'userImg' in data:
+            data['userImg'].name = str(request.user.id) + '.png'
+            data['userImg'] = request.FILES['userImg']
+            serializer = self.serializer_class(
+                request.user, data=data, partial=True
+             )       
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            pass
+            
         password = request.data['password']
 
         if request.user.check_password(password):
@@ -167,9 +183,9 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
             raise exceptions.AuthenticationFailed("Incorrect password!")
 
     def patch(self, request, *args, **kwargs):
-        data = request.data.copy()
-        if 'userImg' in data:
-            data['userImg'].name = str(request.user.id) + '.png'
+
+        data = request.data
+        
         serializer = self.serializer_class(
         request.user, data=data, partial=True
         )
