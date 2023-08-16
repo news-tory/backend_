@@ -34,7 +34,7 @@ class PostDetailView(APIView):   # 게시글 상세
 
     def patch(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
-        serializer = PostSerializer(post, data=request.data)
+        serializer = PostSerializer(post, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -67,7 +67,7 @@ class CommentDetailView(APIView):   # 댓글 상세
     
     def patch(self, request, post_id, comment_id):
         comment = get_object_or_404(Comment, pk=comment_id)
-        serializer = CommentSerializer(comment, data=request.data)
+        serializer = CommentSerializer(comment, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save(user=request.user, post_id=post_id)
             return Response(serializer.data, status=status.HTTP_200_OK)
