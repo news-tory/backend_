@@ -50,6 +50,15 @@ class UploadImageAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request):
+        user = request.user
+        default_image = user._meta.get_field('userImg').default
+        user.userImg = default_image
+        user.save()
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class RegisterAPIView(APIView):
     def post(self, request):
