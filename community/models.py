@@ -13,6 +13,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='article_post_set')  # 작성자
     created_at = models.DateField(auto_now_add=True)                     # 작성일
     content = models.TextField()                                         # 내용
+    is_liked = models.BooleanField(default=False)                        # 좋아요 여부
 
     def __str__(self):
         return self.content
@@ -23,7 +24,6 @@ class Comment(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)  # 작성자
     created_at = models.DateField(auto_now_add=True)                     # 작성일
     content = models.TextField()                                         # 내용
-    like_cnt = models.IntegerField(default=0)                            # 좋아요 수
 
     def __str__(self):
         return self.content

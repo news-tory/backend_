@@ -7,14 +7,13 @@ class PostSerializer(serializers.ModelSerializer):
     like_cnt = serializers.IntegerField(source='post_like_set.count', read_only=True)
     class Meta:
         model = Post
-        fields = ['id', 'user', 'content', 'created_at', 'like_cnt', 'article']
-
+        fields = ['id', 'user', 'content', 'created_at', 'like_cnt', 'article', 'is_liked']
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.nickname', read_only=True)
     class Meta:
         model = Comment
-        fields = ['id', 'post_id', 'user', 'created_at', 'content', 'like_cnt']
+        fields = ['id', 'post_id', 'user', 'created_at', 'content']
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
@@ -23,7 +22,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     like_cnt = serializers.IntegerField(source='post_like_set.count', read_only=True)
     class Meta:
         model = Post
-        fields = ['id', 'user', 'content', 'created_at', 'like_cnt', 'comments', 'article']
+        fields = ['id', 'user', 'content', 'created_at', 'like_cnt', 'comments', 'article', 'is_liked']
 
 
 class PostLikeSerializer(serializers.ModelSerializer):

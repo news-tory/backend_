@@ -11,16 +11,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 
-
-
-
 class ArticleView(APIView):
     def get(self, request):
         articles = Article.objects.all().order_by('-id')
         serializer = ArticleSerializer(articles, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-
 
 class PopularityView(APIView):
     def get(self, request):

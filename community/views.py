@@ -87,6 +87,8 @@ class PostLikeView(APIView):   # 게시글 좋아요
         serializer = PostLikeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user, post=post)
+            post.is_liked = False if post.is_liked else True
+            post.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
