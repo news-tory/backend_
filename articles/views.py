@@ -41,7 +41,7 @@ class LikeArticle(APIView):
     authentication_classes = [JWTAuthentication]
 
     def post(self, request, post_id):
-        post = get_object_or_404(Post, pk=post_id)
+        post = get_object_or_404(Article, pk=post_id)
         serializer = ArticleLikeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user, post=post)
