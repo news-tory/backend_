@@ -12,6 +12,7 @@ class Article(models.Model):
     paper = models.CharField(max_length=100)
     published_date = models.CharField(max_length=1024, null=True)
     popularity = models.IntegerField(default=0)
+    user_like = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
