@@ -12,7 +12,7 @@ class PostView(APIView):   # 게시글 리스트
     authentication_classes = [JWTAuthentication]
 
     def get(self, request):
-        post = Post.objects.all()
+        post = Post.objects.all().order_by('-id')
         serializer = PostSerializer(post, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -32,9 +32,9 @@ class PostDetailView(APIView):   # 게시글 상세
         serializer = PostDetailSerializer(post)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, post_id):
+    def patch(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
-        serializer = PostDetailSerializer(post, data=request.data)
+        serializer = PostSerializer(post, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -65,11 +65,11 @@ class CommentView(APIView):   # 댓글 리스트
 class CommentDetailView(APIView):   # 댓글 상세
     authentication_classes = [JWTAuthentication]
     
-    def put(self, request, post_id, comment_id):
+    def patch(self, request, post_id, comment_id):
         comment = get_object_or_404(Comment, pk=comment_id)
-        serializer = CommentSerializer(comment, data=request.data)
+        serializer = CommentSerializer(comment, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save(user=request.user, post_id=post_id)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)

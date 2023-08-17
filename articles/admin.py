@@ -1,5 +1,5 @@
 from django.contrib import admin
-# from .models import articles
+# from .models import Article, Article_Like
 
-# Register your models here.
-# admin.site.register(articles)
+# admin.site.register(Article)
+# admin.site.register(Article_Like)

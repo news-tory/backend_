@@ -1,32 +1,59 @@
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Article
-from .serializers import ArticleSerializer
+from .models import Article, Article_Like
+from .serializers import ArticleSerializer, ArticleLikeSerializer
 from django.conf import settings
 from community.models import Post
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 
 class ArticleView(APIView):
     def get(self, request):
         articles = Article.objects.all().order_by('-id')
-        serializer = ArticleSerializer(articles, many=True)
+        serializer = ArticleSerializer(articles, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
 class PopularityView(APIView):
     def get(self, request):
-        articles = Article.objects.all().order_by('-popularity')
-        serializer = ArticleSerializer(articles, many=True)
+        articles = Article.objects.all()
+        sorted_articles = sorted(articles, key=lambda article: article.article_post_set.count() + article.article_like.count(), reverse=True)
+        serializer = ArticleSerializer(sorted_articles, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ArticleDetail(APIView):
     def get(self, request, pk):
         article = get_object_or_404(Article, pk=pk)
-        serializer = ArticleSerializer(article)
+        serializer = ArticleSerializer(article, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class LikeArticle(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Article, pk=pk)
+        serializer = ArticleLikeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, post=post)
+            post.user_like = True
+            post.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLikeArticle(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request, nickname):
+        liked_articles = Article.objects.filter(article_like__user__nickname=nickname)
+        serializer = ArticleSerializer(liked_articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -102,6 +129,8 @@ def init_integrate_db(request):
             section = article['section']
             news_data.section = section_mapping.get(section, 'etc')
             news_data.paper = 'NewYorkTimes'
+            news_data.published_date = article['published_date']
+
 
 
             news_data.save()

@@ -32,6 +32,33 @@ from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.google import views as google_view
 
+class UploadImageAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data['userImg'], status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        data = request.FILES
+        
+        serializer = UserSerializer(
+            request.user, data=data, partial=True
+        )       
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response("invalid request", status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request):
+        user = request.user
+        default_image = user._meta.get_field('userImg').default
+        user.userImg = default_image
+        user.save()
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class RegisterAPIView(APIView):
     def post(self, request):
@@ -166,8 +193,9 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
             raise exceptions.AuthenticationFailed("Incorrect password!")
 
     def patch(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data['userImg'].name = str(request.user.id) + '.png'
+
+        data = request.data
+        
         serializer = self.serializer_class(
         request.user, data=data, partial=True
         )

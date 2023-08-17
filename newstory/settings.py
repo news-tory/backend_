@@ -30,9 +30,8 @@ STATE = os.getenv("STATE")
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 유저 프로필 이미지 저장 ROOT
-MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -79,6 +78,8 @@ INSTALLED_APPS = [
     # cors
     'corsheaders',
 
+    # Django-cleanup
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -220,7 +221,7 @@ REST_FRAMEWORK = {
 
 # 추가적인 JWT 설정 (다 쓸 필요는 없음)
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
