@@ -1,7 +1,7 @@
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Article
+from .models import Article, Article_Like
 from .serializers import ArticleSerializer, ArticleLikeSerializer
 from django.conf import settings
 from community.models import Post
@@ -40,16 +40,16 @@ class ArticleDetail(APIView):
 class LikeArticle(APIView):
     authentication_classes = [JWTAuthentication]
 
-    def post(self, request, post_id):
-        post = get_object_or_404(Article, pk=post_id)
+    def post(self, request, pk):
+        post = get_object_or_404(Article, pk=pk)
         serializer = ArticleLikeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user, post=post)
-            Article.user_like = True
-            Article.save()
+            post.user_like = True
+            post.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLikeArticle(APIView):
