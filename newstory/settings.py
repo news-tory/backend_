@@ -255,7 +255,9 @@ SIMPLE_JWT = {
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
-    "https://port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app"]
+    "https://port-0-hackbackend-20zynm2mljmm4yrc.sel4.cloudtype.app",
+    "http://localhost:3000"]
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 
